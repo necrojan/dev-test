@@ -4,18 +4,28 @@
  */
 ?>
 <p><?= $block->getGreeting() ?></p>
+<select id="animals" style="width:50%; margin-bottom: 15px;"></select>
 <div id="animalid-photo"></div>
 <script>
     require(['jquery', 'domReady!'], function ($) {
+        $('#animals').change(function () {
+            let src = $(this).val();
+            $('#animalid-photo').html("<img src='" + src + "'/>");
+        });
+
         return $.ajax({
             url: '<?= $block->getPhotoUrl() ?>',
             type: 'GET'
         }).done(
             function (response) {
                 console.log(response);
+                $('#animals').attr('disabled', false);
+                $.each(response.photos, function (key, value) {
+                    $('#animals').append('<option value=' + value +'>' + key + '</option>');
+                });
                 const photoImg = document.createElement('img'); 
                 photoImg.alt = 'Profile photo';
-                photoImg.src = response.photo;
+                photoImg.src = response.photos['cat'];
 
                 const photoDiv = document.getElementById('animalid-photo');
                 if (photoDiv) {

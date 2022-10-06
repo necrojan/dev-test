@@ -63,10 +63,10 @@ class Photo implements HttpGetActionInterface
      */
     public function execute()
     {
-        $photo = new Animal\Cat();
+        $photo = new Animal\Animals();
 
         try {
-            return $this->jsonResponse(['photo' => $photo->getContent()]);
+            return $this->jsonResponse(['photos' => $photo->getContents()]);
         } catch (LocalizedException $e) {
             return $this->jsonResponse($e->getMessage());
         } catch (\Exception $e) {
