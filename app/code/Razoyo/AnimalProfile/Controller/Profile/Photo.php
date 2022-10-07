@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Razoyo\AnimalProfile\Controller\Profile;
 
 use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -37,6 +38,11 @@ class Photo implements HttpGetActionInterface
     protected $http;
 
     /**
+     * @var DeploymentConfig
+     */
+    protected $deploymentConfig;
+
+    /**
      * Constructor
      *
      * @param PageFactory $resultPageFactory
@@ -48,12 +54,14 @@ class Photo implements HttpGetActionInterface
         PageFactory $resultPageFactory,
         Json $json,
         LoggerInterface $logger,
-        Http $http
+        Http $http,
+        DeploymentConfig $deploymentConfig
     ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->serializer = $json;
         $this->logger = $logger;
         $this->http = $http;
+        $this->deploymentConfig = $deploymentConfig;
     }
 
     /**
@@ -63,7 +71,7 @@ class Photo implements HttpGetActionInterface
      */
     public function execute()
     {
-        $photo = new Animal\Animals();
+        $photo = new Animal\Animals($this->deploymentConfig);
 
         try {
             return $this->jsonResponse(['photos' => $photo->getContents()]);

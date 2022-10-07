@@ -2,15 +2,22 @@
 
 namespace Razoyo\AnimalProfile\Animal;
 
+use Magento\Framework\App\DeploymentConfig;
+
 class Animals
 {
-    private array $pets = ['cat', 'dog', 'llama', 'anteater'];
+    private DeploymentConfig $deploymentConfig;
+
+    public function __construct(DeploymentConfig $deploymentConfig)
+    {
+        $this->deploymentConfig = $deploymentConfig;
+    }
 
     public function getContents(): array
     {
         $arr = [];
 
-        foreach ($this->getPets() as $pet) {
+        foreach ($this->getDeploymentConfig()->get('animals') as $pet) {
             $className = ucfirst($pet);
             $classPathName = __NAMESPACE__ . '\\' . $className;
             if (class_exists($classPathName)) {
@@ -22,8 +29,11 @@ class Animals
         return $arr;
     }
 
-    public function getPets(): array
+    /**
+     * @return DeploymentConfig
+     */
+    public function getDeploymentConfig(): DeploymentConfig
     {
-        return $this->pets;
+        return $this->deploymentConfig;
     }
 }
